@@ -18,7 +18,7 @@ class ProductDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(loadProduct.title),
+        title: Text(loadProduct.title!),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -27,7 +27,7 @@ class ProductDetailScreen extends StatelessWidget {
               height: 300,
               width: double.infinity,
               child: Image.network(
-                loadProduct.imageUrl,
+                loadProduct.imageUrl!,
                 fit: BoxFit.cover,
               ),
             ),
