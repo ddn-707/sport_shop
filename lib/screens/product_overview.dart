@@ -6,6 +6,7 @@ import 'package:myapp/providers/cart.dart';
 import 'package:myapp/screens/cart_screen.dart';
 import 'package:myapp/widgets/app_drawer.dart';
 import 'package:myapp/widgets/badge.dart';
+import 'package:myapp/providers/products.dart';
 
 enum FilterOptions {
   Favorites,
@@ -19,10 +20,32 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   var _showOnlyFavorites = false;
+  var _isInit = true;
+  var _isLoading = false;
+
+  @override
+  void initState() {
+    // Future.delayed(Duration.zero).then((_) {Provider.of<Products>(context,listen: false).fetchAndSendProducts();});
+    super.initState();
+  }
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Products>(context).fetchAndSendProducts().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // final productContainer = Provider.of<Products>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('My Shop'),
@@ -50,22 +73,25 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                       value: FilterOptions.All,
                     )
                   ]),
-          Consumer<Cart>(builder: (_, cart, ch) => Badge(
+          Consumer<Cart>(
+            builder: (_, cart, ch) => Badge(
               child: ch!,
               value: cart.itemCount.toString(),
-          ),
-              child: IconButton(
-                  onPressed: () => {
-                    Navigator.of(context).pushNamed(CartScreen.routeName),
-                  },
-                  icon: Icon(
-                    Icons.shopping_cart,
-              )),
+            ),
+            child: IconButton(
+                onPressed: () => {
+                      Navigator.of(context).pushNamed(CartScreen.routeName),
+                    },
+                icon: Icon(
+                  Icons.shopping_cart,
+                )),
           )
         ],
       ),
       drawer: AppDrawer(),
-      body: ProductGrid(_showOnlyFavorites),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ProductGrid(_showOnlyFavorites),
     );
   }
 }
