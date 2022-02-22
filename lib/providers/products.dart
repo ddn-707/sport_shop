@@ -64,7 +64,8 @@ class Products with ChangeNotifier {
       final response = await http.get(
         url,
       );
-      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      final extractedData = json.decode(response.body) as Map<String, dynamic>?;
+      if(extractedData == null){return;}
       final List<Product> loadedProducts = [];
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(Product(
@@ -129,7 +130,7 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteProduct(String id) async {
+  Future<void> deleteProduct(String? id) async {
     final url = Uri.parse(
         'https://flutter-update-89c84-default-rtdb.firebaseio.com/products/$id.json');
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
@@ -140,8 +141,8 @@ class Products with ChangeNotifier {
     if (response.statusCode >= 400) {
       _items.insert(existingProductIndex, existingProduct);
       notifyListeners();
-      throw HttpException('Could no t delete product');
+      throw HttpException('Could not delete product');
     }
-    existingProduct = null!; 
+    // existingProduct = null!; 
   }
 }
