@@ -74,7 +74,7 @@ class Cart with ChangeNotifier {
           (existCartItem) => CartItem(
               id: existCartItem.id,
               title: existCartItem.title,
-              quantity: existCartItem.quantity,
+              quantity: existCartItem.quantity-1,
               price: existCartItem.price));
     }
     else{

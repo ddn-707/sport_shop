@@ -5,7 +5,7 @@ import 'package:myapp/providers/products.dart';
 import 'package:provider/provider.dart';
 
 class EditProductScreen extends StatefulWidget {
-  static const routeName = './edit-product';
+  static const routeName = '/edit-product';
   @override
   _EditProductScreenState createState() => _EditProductScreenState();
 }
@@ -37,7 +37,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
   void didChangeDependencies() {
     if (_isInit) {
       final productId = ModalRoute.of(context)!.settings.arguments;
-      // ignore: unnecessary_null_comparison
       if (productId != null) {
         _editedProduct = Provider.of<Products>(context, listen: false)
             .findById(productId.toString());
