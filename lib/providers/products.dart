@@ -63,7 +63,7 @@ class Products with ChangeNotifier {
   Future<void> fetchAndSendProducts([bool filterByUser = false]) async {
     final filterString = filterByUser ?'orderBy="creatorId"&equalTo="$userId"':'';
     var url = Uri.parse(
-        'https://flutter-update-89c84-default-rtdb.firebaseio.com/products.json?$authToken&$filterString');
+        'https://flutter-update-89c84-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filterString');
     try {
       final response = await http.get(
         url,
